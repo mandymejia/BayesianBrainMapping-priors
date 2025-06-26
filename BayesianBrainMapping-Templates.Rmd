@@ -1,7 +1,7 @@
 ---
 title: "Individualized functional topographic mapping with the BayesBrainMap R package
   and Human Connectome Project-derived priors"
-author: "Nohelia Da Silva, Damon D. Pham, Ellyn Butler, Amanda F. Mejia"
+author: "Nohelia Da Silva Sanchez, Damon D. Pham, Ellyn Butler, Amanda F. Mejia"
 date: "2025-05-07"
 output:
   pdf_document:
@@ -44,7 +44,9 @@ Once a set of group-level network maps has been chosen, there are two steps to
 performing BBM.  Both are implemented in the 
 `BayesBrainMap` R package.
 
-** TODO: ADD DIAGRAM **
+```{r, echo=FALSE, out.width="80%"}
+knitr::include_graphics(file.path(dir_data, "inputs/Drawing_v1.pdf"))
+```
 
 Here, we perform Step 1 using data from the Human Connectome Project (HCP). Specifically,
 we train CIFTI-format Bayesian brain mapping priors using a variety of ICA and 
@@ -757,7 +759,8 @@ The final list of valid subjects is saved in `dir_results` as:
 -   `valid_<encoding>_subjects_balanced.rds` (used in the prior estimation step)
 
 ```{r warning=FALSE, eval=FALSE}
-# This script balances sex within each age group for subjects who passed FD and unrelated filtering.
+# This script balances sex within each age group for subjects who passed FD and 
+# unrelated filtering.
 # For each encoding (LR, RL, combined), it samples subjects to equalize the number
 # of males and females per age group, 
 # unless an age group includes only one gender (in which case no balancing is applied).
