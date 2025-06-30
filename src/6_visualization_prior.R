@@ -6,12 +6,12 @@ get_prior_title <- function(base_name, i, prior, encoding, gsr_status) {
 
   if (grepl("Yeo17", base_name, ignore.case = TRUE)) {
     label_name <- rownames(prior$GICA_parc_table)[prior$GICA_parc_table$Key == i]
-    return(paste0("Yeo 17 Network ", label_name, " (#", i, ") - ", gsr_status, " (", encoding, ")"))
+    return(paste0("Yeo 17 Network ", label_name, " (#", i, ")"))
   }
   ic_match <- regmatches(base_name, regexpr("GICA\\d+", base_name))
 
   nIC <- as.numeric(gsub("GICA", "", ic_match))
-  title_str <- paste0("GICA ", nIC, " - Component ", i, " - ", gsr_status, " (", encoding, ")")
+  title_str <- paste0("GICA ", nIC, " - Component ", i)
 
   return(title_str)
 }
