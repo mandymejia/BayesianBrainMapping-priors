@@ -525,8 +525,10 @@ This example uses:
 prior <- readRDS("priors/Yeo17/prior_combined_Yeo17_GSR.rds")
 
 # Load subject fMRI data (CIFTI format)
-BOLD <- c(file.path(dir_data, "inputs", "rfMRI_REST1_LR_Atlas_MSMAll_hp2000_clean.dtseries.nii"),
-          file.path(dir_data, "inputs", "rfMRI_REST1_RL_Atlas_MSMAll_hp2000_clean.dtseries.nii"))
+BOLD <- c(file.path(dir_data, "inputs", 
+                    "rfMRI_REST1_LR_Atlas_MSMAll_hp2000_clean.dtseries.nii"),
+          file.path(dir_data, "inputs", 
+                    "rfMRI_REST1_RL_Atlas_MSMAll_hp2000_clean.dtseries.nii"))
 ```
 
 The fMRI input must be a CIFTI, NIFTI, or matrix object compatible with the prior.
