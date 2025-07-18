@@ -4,12 +4,14 @@ title: "Individualized functional topographic mapping with the BayesBrainMap R p
 author: "Nohelia Da Silva Sanchez, Damon D. Pham, Ellyn Butler, Amanda F. Mejia"
 date: "2025-05-07"
 output:
-  pdf_document:
-    latex_engine: xelatex
   html_document: default
+  bookdown::pdf_document2:
+    toc: false
+    latex_engine: xelatex
   word_document: default
 bibliography: references.bib
-header-includes: \usepackage{pifont}
+link-citations: yes
+header-includes: \usepackage{pifont} \usepackage{float}
 editor_options:
   markdown:
     wrap: sentence
@@ -62,10 +64,10 @@ duration, without the need for ``dense sampling'' of individuals.
 
 There are two steps to performing BBM, which are implemented in the
 `BayesBrainMap` R package: *(1) prior estimation* and *(2) model fitting*
-(Figure 1). Here, our primary focus is creating and sharing population-derived
-priors for using data from the HCP, based on various templates. These priors can
-be directly used to perform BBM in studies of healthy young adults. To perform
-BBM to study individuals from other populations, or using other templates, we
+(Figure \@ref(fig:model-overview)). Here, our primary focus is creating and sharing 
+population-derived priors for using data from the HCP, based on various templates. 
+These priors can be directly used to perform BBM in studies of healthy young adults.
+To perform BBM to study individuals from other populations, or using other templates, we
 provide and describe the code used to produce the HCP-derived priors, so that
 this workflow can be easily reproduced using other datasets. We also provide
 guidance for visual investigation of the priors to ensure quality.
@@ -81,9 +83,8 @@ the MSC. Application to the MSC will also exemplify the ability of BBM to reveal
 individual features of functional topography from a single session of data,
 without the need for dense sampling.
 
-```{r, echo=FALSE, out.width="80%", fig.align='center'}
+```{r model-overview, echo=FALSE, out.width="80%", fig.align='center', fig.cap="Overview of the Bayesian Brain Mapping Workflow"}
 knitr::include_graphics(file.path(dir_data, "inputs/Drawing_v1.pdf"))
-#Nohelia, can you add Figure captions and dynamic references in the text?
 ```
 
 ## 2. Methods
@@ -129,7 +130,7 @@ on $\mathbf{a}_t$ with mean zero and covariance $\mathbf{G}$, and assuming a
 population-derived hyperprior on $\mathbf{G}$:
 
 $$
-\mathbf{a}_t &\sim N(\mathbf{0}, \mathbf{G}), \mbox{ where } \mathbf{G} \sim p(\mathbf{G}) ,
+\mathbf{a}_t \sim N(\mathbf{0}, \mathbf{G}), \mbox{ where } \mathbf{G} \sim p(\mathbf{G}) ,
 $$
 
 See [CITE Mejia 2025] for details on the population-derived prior on the
@@ -143,7 +144,7 @@ intensive.
 
 Here, we build HCP-derived priors for Bayesian brain mapping using several
 different choices of template, including two different parcellations and group
-ICA maps (Table 1). Specifically, we use the 17-network Yeo parcellation (CITE),
+ICA maps (Table \@ref(tab:template-summary)). Specifically, we use the 17-network Yeo parcellation (CITE),
 the MSC group parcellation (CITE and get the real name), and the HCP group ICA maps
 with 15, 25, and 50 components. For each template, we build priors with and
 without global signal regression (GSR), since whether or not to perform GSR is
@@ -183,15 +184,12 @@ Before estimating the BBM priors, we first select a high-quality, balanced
 subject sample to ensure high-quality and representative priors. Starting from
 the full HCP sample of $N=1206$ subjects, we apply several filters to obtain the
 final sample for the priors. First, we exclude subjects with insufficient scan
-duration after motion scrubbing [Nohelia, what FD threhold was used?] and
-dropping the first 15 frames. Second, we exclude any related subjects. Finally,
-we balace sex within age groups. See [Appendix B] for details.  After all
-filters, our final sample contains data from X [Nohelia, how many?  Can be
-approximate if it differs across LR/RL/combined] subjects, which is used to
-estimate the priors. [Nohelia, we are missing the information about which runs
-were actually used for the LR, RL and combined priors.  For LR I guess it must
-be REST1_LR and REST2_LR, and same for RL, but what about combined?]
-
+duration after motion  scrubbing using a framewise displacement (FD) threshold
+of 0.5 mm and dropping the first 15 frames. Second, we exclude any related subjects. 
+Finally, we balanced sex within age groups. See [Appendix B](#appendix-subjectfiltering)
+for details.  After all filters, our final sample contains approximately 350 
+subjects for each encoding condition (LR, RL) and for the combined dataset, which are used to
+estimate the priors. 
 
 ### 2.3 Workflow Overview
 
@@ -782,7 +780,7 @@ src_dir <- file.path(github_repo_dir, "src")
 source(file.path(src_dir, "0_setup.R"))
 ```
 
-## Appendix B: Subject Filtering
+## Appendix B: Subject Filtering {#appendix-subjectfiltering}
 
 ### Appendix B.1: Filter Subjects by Sufficient fMRI Scan Duration {#appendix-filtering-1}
 
@@ -798,17 +796,11 @@ A volume is considered valid if it passes an FD threshold, and a subject is reta
 The final subject lists include those who passed the filtering criteria separately for each encoding: `LR`, `RL`, and their intersection, referred to as the`combined` list. The combined list includes only subjects who passed all criteria for both LR and RL encodings across both visits (REST1 and REST2), and is the one used throughout this project.
 
 ```{r warning=FALSE, eval=FALSE}
-
-# ````````````````````
-# @Nohelia, can you report the FD threshold used, both here and above in the 
-# Methods section where the filters are mentioned?
-# ````````````````````
-
 # This script filters subjects based on motion using framewise displacement (FD)
 # from fMRIscrub.
-# For each subject, encoding (LR/RL), and session (REST1/REST2), it computes FD 
-# and valid scan
-# time after excluding high-motion volumes.
+# For each subject, encoding (LR/RL), and session (REST1/REST2), it computes FD,
+# flags volumes exceeding the FD threshold of 0.5 mm (scrubbing), 
+# and calculates valid scan time after excluding those high-motion volumes.
 # Subjects with ≥10 minutes of valid data in both sessions are retained.
 # Outputs (saved in dir_results):
 # - Valid subject lists for LR, RL, and combined encodings (intersection)
