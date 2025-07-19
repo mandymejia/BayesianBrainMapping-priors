@@ -34,12 +34,12 @@ functional brain topographic maps from existing group-level network maps or
 set of group ICA maps, or other types of network maps like PROFUMO or NNF.  BBM
 is a generalization of template ICA [@mejia2020bayesian], in which the template
 is a set of group ICA maps. In BBM, the template is not used directly in the
-individual-level model, but rather forms is the basis of *population-derived
+individual-level model, but rather forms the basis of *population-derived
 priors*, which are used in a Bayesian model. The priors are derived from a
 training set of subjects from a representative population, either using holdout
 data from the focal study or using data from a publicly available neuroimaging
-repository such as the Human Connectome Project (HCP) (CITE) or Alzheimer's
-Disease Neuroimaging Initiative (ADNI) (CITE).
+repository such as the Human Connectome Project (HCP) [@van2013wu] or Alzheimer's
+Disease Neuroimaging Initiative (ADNI) [@mueller2005alzheimer].
 
 The Bayesian model in BBM is a single-subject ``hierarchical'' source separation
 model, with parameters representing the spatial topography of different networks
@@ -53,7 +53,8 @@ computationally efficient, and potentially clinically applicable.
 The use of population-derived priors in BBM reduces noise while retaining
 relevant signal. This results in more reliable individual-level network
 topography maps and the functional connectivity between them
-[@mejia2020bayesian] (also CITE Mejia 2022 and 2025). An important feature of
+[@mejia2020bayesian] [@mejia2022longitudinal]
+[@singh2025robust]. An important feature of
 the BBM priors on spatial topography is that they spatially vary within each
 network, which allows individual differences to be expressed where they exist
 while reducing noise in background regions. Furthermore, due to the continuous,
@@ -74,7 +75,7 @@ this workflow can be easily reproduced using other datasets. We also provide
 guidance for visual investigation of the priors to ensure quality.
 
 Finally, we illustrate the model fitting step using an individual from the HCP
-and individuals from an external study, the midnight scan club (MSC) (CITE). The
+and individuals from an external study, the midnight scan club (MSC) [@gordon2017precision]. The
 MSC focuses on a similar population as the HCP but differs in acquisition
 methods. Since the population-derived priors used in BBM encode the distribution
 of signal, not noise, priors derived from one study can be applied to other
@@ -109,7 +110,7 @@ and $a_{tq}$ is the temporal activation of network $q$ at time point $t$. The ve
 $\mathbf{a}_t$ and $\mathbf{s}_v$ combine those values across all $Q$ networks. 
 
 The second level of the model incorporates the population-derived prior on the 
-spatial topography in ${s}_{qv}$, as described in [CITE Mejia 2020]:
+spatial topography in ${s}_{qv}$, as described in [@mejia2020bayesian]:
 
 $$
 s_{qv} = s^0_{qv} + \delta_{qv},\quad\delta_{qv} \sim N(0, \sigma^2_{qv}),
@@ -118,13 +119,13 @@ where $s^0_{qv}$ and $\sigma^2_{qv}$ are known via the prior, and the deviation
 terms $\delta_{qv}$ represent individual differences between the subject and the
 population average. Optionally, spatial dependencies in $\delta_{qv}$ can be
 modeled via a spatial prior for additional accuracy and power, though at a
-higher computational cost (CITE Mejia 2022). Note that structured noise may
+higher computational cost [@mejia2022longitudinal]. Note that structured noise may
 exist in the data that is not well-captured by the residual noise term. While in
 ICA it is common to model structured noise as components, in BBM these are not
-included in the model because can be removed beforehand as described in [CITE
-Mejia 2020] or via other methods like ICA-FIX.
+included in the model because can be removed beforehand as described in 
+[@mejia2020bayesian] or via other methods like ICA-FIX.
 
-The third level of the mdoel incorporates the population-derived prior on the
+The third level of the model incorporates the population-derived prior on the
 functional connectivity between networks, which is represented by the covariance
 of $\mathbf{a}_t$. This is accomplished by assuming a multivariate Normal prior
 on $\mathbf{a}_t$ with mean zero and covariance $\mathbf{G}$, and assuming a
@@ -134,7 +135,7 @@ $$
 \mathbf{a}_t \sim N(\mathbf{0}, \mathbf{G}), \mbox{ where } \mathbf{G} \sim p(\mathbf{G}) ,
 $$
 
-See [CITE Mejia 2025] for details on the population-derived prior on the
+See [@singh2025robust] for details on the population-derived prior on the
 functional connectivity. Briefly, two choices exist for this prior: the
 conjugate Inverse-Wishart distribution, or a novel Cholesky-based prior
 developed for this model, which involves sampling. The former is faster, while
@@ -145,8 +146,9 @@ intensive.
 
 Here, we build HCP-derived priors for Bayesian brain mapping using several
 different choices of template, including two different parcellations and group
-ICA maps (Table \@ref(tab:template-summary)). Specifically, we use the 17-network Yeo parcellation (CITE),
-the MSC group parcellation (CITE and get the real name), and the HCP group ICA maps
+ICA maps (Table \@ref(tab:template-summary)). Specifically, we use the
+17-network Yeo parcellation [@yeo2011organization], the MSC group parcellation
+[@gordon2017precision], and the HCP group ICA maps
 with 15, 25, and 50 components. For each template, we build priors with and
 without global signal regression (GSR), since whether or not to perform GSR is
 an important choice that remains the subject of debate.
