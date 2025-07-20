@@ -12,14 +12,16 @@ output:
   word_document: default
 bibliography: references.bib
 link-citations: yes
-header-includes: \usepackage{pifont} \usepackage{float}
+header-includes: \usepackage{pifont} \usepackage{float} \usepackage{caption}
 editor_options:
   markdown:
     wrap: sentence
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.pos = "H")
+library(kableExtra)
+library(magrittr)
 ```
 
 ## 1. Introduction
@@ -149,7 +151,7 @@ different choices of template, including two different parcellations and group
 ICA maps (Table \@ref(tab:template-summary)). Specifically, we use the
 17-network Yeo parcellation [@yeo2011organization], the MSC group parcellation
 [@gordon2017precision], and the HCP group ICA maps
-with 15, 25, and 50 components. For each template, we build priors with and
+with 15, 25, and 50 components [@smith2013functional]. For each template, we build priors with and
 without global signal regression (GSR), since whether or not to perform GSR is
 an important choice that remains the subject of debate.
 
@@ -201,7 +203,6 @@ Setup
 To reproduce this workflow, first follow the setup process outlined in [Appendix A](#appendix-setup). 
 
 ## 3. Choosing Training Subjects
-
 
 1. **Filter Subjects by Sufficient fMRI Scan Duration**
    
@@ -263,9 +264,9 @@ We consider two types of group-level parcellations for estimating priors:
 
 - HCP GICA parcellation (`GICA15.dscalar.nii`, etc.), available in the `data_OSF/inputs` folder. These files were downloaded from the HCP website, specifically from the CIFTI Subject-specific ICA Parcellations dataset for 15-, 25-, and 50-dimensionalities.
 
-- Yeo17 parcellation (CITE). For details on how this parcellation was processed and simplified for use, see [Appendix D](#appendix-parcellations).
+- Yeo17 parcellation [@yeo2011organization]. For details on how this parcellation was processed and simplified for use, see [Appendix D](#appendix-parcellations).
 
-Each of these parcellations was used to estimate priors with and without global signal regression (GSR), resulting in eight total priors saved as .rds files. See Table \hyperref[tab:template-summary]{Table~\ref*{tab:template-summary}} for a summary of the parcellations and GSR combinations.
+Each of these parcellations was used to estimate priors with and without global signal regression (GSR), resulting in eight total priors saved as .rds files. See (Table \@ref(tab:template-summary)) for a summary of the parcellations and GSR combinations.
 
 ```{r warning=FALSE, eval=FALSE}
 # This script estimates and saves functional connectivity priors 
@@ -790,7 +791,7 @@ source(file.path(src_dir, "0_setup.R"))
 We begin by filtering subjects based on the fMRI scan duration after motion scrubbing
 For each subject, and for each session (`REST1`, `REST2`) and encoding direction (`LR`, `RL`), 
 we compute framewise displacement (FD) using the `fMRIscrub` package. We use a lagged
-and filtered version of FD (CITE Pham Less is More and Power/Fair refs therein) 
+and filtered version of FD [@phạm2023less] [@power2012spurious] [@fair2009functional] 
 appropriate for multiband data. FD is calculated from the `Movement_Regressors.txt` 
 file available in the HCP data for each subject, encoding and session.
 
@@ -832,12 +833,18 @@ During this step, an FD summary table is generated with the following columns:
 
 #### Preview of FD Summary Table
 
-```{r warning=FALSE}
-# Read FD summary
+\leavevmode
+
+```{r, results='asis', echo=FALSE}
 fd_summary <- read.csv(file.path(dir_data, "outputs", "filtering", "fd_summary.csv"))
 
-# Display the first 4 rows
-knitr::kable(head(fd_summary, 4), caption = "First rows of FD summary table")
+tbl <- kable(fd_summary[1:4, ], caption = NULL, booktabs = TRUE, format = "latex") %>%
+  kable_styling(latex_options = "HOLD_position")
+
+cat(tbl)
+cat("\\vspace{-0.4cm}\n")
+cat("\\captionof{table}{First rows of FD summary table}\n")
+cat("\\vspace{0.5cm}\n")
 ```
 
 As shown above, subject 100206 qualifies for further analysis because each of the four sessions (REST1/REST2 × LR/RL) contains at least 600 seconds of valid data.
@@ -1004,6 +1011,8 @@ estimate_prior(
   verbose = TRUE              # Print progress updates
 )
 ```
+
+\newpage
 
 ## References
 
