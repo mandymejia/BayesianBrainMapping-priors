@@ -30,68 +30,151 @@ library(magrittr)
 dir_data <- "data_OSF"
 ```
 
-Bayesian brain mapping (BBM) is a technique for producing individualized
-functional brain topographic maps from existing group-level network maps or
-*templates*.  Those templates take the form of either a group parcellation, a
-set of group ICA maps, or other types of network maps like PROFUMO or NNF.  BBM
-is a generalization of template ICA [@mejia2020bayesian], in which the template
-is a set of group ICA maps. In BBM, the template is not used directly in the
-individual-level model, but rather forms the basis of *population-derived
-priors*, which are used in a Bayesian model. The priors are derived from a
-training set of subjects from a representative population, either using holdout
-data from the focal study or using data from a publicly available neuroimaging
-repository such as the Human Connectome Project (HCP) [@van2013wu] or Alzheimer's
-Disease Neuroimaging Initiative (ADNI) [@mueller2005alzheimer].
+The functional organization of the brain is highly individualized, both in terms
+of the spatial configuration (CITE Gordon 2017 MSC paper) and temporal dynamics
+(CITE Finn fingerprinting paper) of functional brain networks. The collection
+and analysis of datasets featuring "highly sampled" individuals (CITE Braga and
+Buckner 2017, Gordon 2017 MSC paper, Xue et al. 2021) have been crucial in
+elucidating individual differences in spatial topography in particular, since
+large amounts of data per individual facilitates accurate estimation of
+individual functional topographic maps. Furthermore, individual functional
+topography has been shown to be predictive of various phenotypes as well as
+disease severity (see citations from OHBM 2023 talk, slide 4). Therefore,
+individual features of functional topography are a potentially valuable source
+of imaging-based biomarkers.
 
-The Bayesian model in BBM is a single-subject ``hierarchical'' source separation
-model, with parameters representing the spatial topography of different networks
-and their corresponding temporal activation profiles. The model is hierarchical
-in the sense that it includes population-derived priors on those parameters.
-While hierarchical models typically require multi-subject data to establish the
-shared prior parameters, in BBM the model is fit to a single subject using
-priors that are already established. This allows BBM to be highly pragmatic,
-computationally efficient, and potentially clinically applicable.
+Recent research has also revealed that the use of group parcellations or network
+maps for studies of functional connectivity (FC), i.e. the temporal synchrony
+between regions of the brain, can lead to systematically biased estimates of FC
+(CITE Bijsterbosch 2018, 2019). This is because group parcels or networks that
+are misaligned to the individual's functional topography mix signals from
+different functional areas. Thus, true differences in functional topography can
+be misinterpreted as differences in FC.  A potential consequence is that real
+behavioral or phenotypic correlates with functional topography may be
+incorrectly attributed to FC. To understand the brain mechanisms underlying
+certain behaviors or disease states, rather than simply predict them, it is
+crucial to disengangle differences in spatial topography from temporal
+engagement and connectivity.
+
+An effective approach for extracting individual functional topography from
+functional magnetic resonance imaging (fMRI) data is the use of hierarchical
+Bayesian models. These models reduce noise by combining information from
+multiple subjects, while respecting individual differences and ensuring
+correspondence between individuals.  Hierarchical models been successfully
+applied in the context of parcellation (CITE Kong et al 2021), probabilistic
+functional modes (PROFUMO) (CITE Harrison et al., 2015, Farahibozorg et al.
+2021), and independent component analysis (ICA) (CITE Guo and Tang, 2013; Mejia
+et al., 2020). Importantly, they have been shown to perform well based on a
+modest amount of data per individual, potentially avoiding the need to collect
+prolonged or repeated sessions of data in individuals (CITE Kong 2021, Mejia
+2020). This makes them highly pragmatic, since extensive subject-level scanning
+is not feasible in many contexts, especially in clinical settings where it can
+present a financial and physical burden for patients.
+
+Meanwhile, there is growing evidence for the existence and relevance of
+overlapping functional architecture (Cite Faskowitz 2020 Nature Neuroscience).
+This favors "soft" parcellations allowing for overlap between functional
+networks over traditional "hard" parcellations (CITE Bijsterbosch 2023,
+https://www.sciencedirect.com/science/article/pii/S1053811920306121,
+https://doi.org/10.1016/j.neuroimage.2017.11.003, others). Examples of soft
+parcellation approaches include spatial ICA (CITE
+https://doi.org/10.1109/TMI.2003.822821), temporal ICA (CITE
+https://doi.org/10.1073/pnas.112132910), PROFUMO (CITE Harrison 2015),
+non-negative matrix factorization (NMF) (CITE), gradients (CITE
+https://doi.org/10.1073/pnas.1608282113), and dictionaries of functional modes
+(DiFuMo) (CITE https://doi.org/10.1016/j.neuroimage.2020.117126). Spatial ICA,
+while one of the most popular methods, has the disadvantage of discouraging
+statistical dependence between network maps, leading to relatively little
+overlap between networks. PROFUMO and temporal ICA allow for greater spatial
+overlap, but have the disadvantage of encouraging or enforcing temporal
+independence between networks, resulting in low levels of functional
+connectivity between networks (CITE Pervais 2020). Less constrained methods have
+the potential advantage of expressing both the temporal and spatial dependence
+between networks, but in the absence of model constraints they often require
+externally-derived information to guide estimation.
+
+Here we describe Bayesian brain mapping (BBM), a pragmatic and flexible
+hierarchical Bayesian technique for producing individualized functional brain
+topographic maps without constraining the spatial or temporal structure of the
+networks.  BBM begins with a *template*, which can take the form of either a
+group parcellation or a set of continous network maps.  BBM is a generalization
+of template ICA [@mejia2020bayesian], in which the template is a set of group
+ICA maps, but BBM allows for other types of network maps or parcellations.  
+In BBM, the template is not used directly in the individual-level
+model, but rather is used to construct *population-derived priors*, which are in turn
+used in a Bayesian model fit to an individual subject. The priors are based on a training set of subjects
+from a representative population, either using holdout data from the focal study
+or data from a publicly available neuroimaging repository such as the Human
+Connectome Project (HCP) [@van2013wu] or Alzheimer's Disease Neuroimaging
+Initiative (ADNI) [@mueller2005alzheimer]. The BBM model includes
+parameters representing subject-specific spatial topography of different networks and their
+corresponding temporal activation profiles. The model is hierarchical in the
+sense that it includes population-derived priors on those parameters, but it is
+fit to data from a single subject to estimate the subject-specific spatial
+topography and temporal activation. While hierarchical models typically require
+multi-subject data to establish the shared prior parameters, BBM avoids this
+requirement by using priors that are already established. This allows BBM to be
+highly pragmatic, computationally efficient, and potentially clinically
+applicable.
+
 
 The use of population-derived priors in BBM reduces noise while retaining
 relevant signal. This results in more reliable individual-level network
 topography maps and the functional connectivity between them
-[@mejia2020bayesian] [@mejia2022longitudinal]
-[@singh2025robust]. An important feature of
-the BBM priors on spatial topography is that they spatially vary within each
-network, which allows individual differences to be expressed where they exist
-while reducing noise in background regions. Furthermore, due to the continuous,
-overlapping nature of BBM network maps, noise reduction in background regions of
-one network indirectly contributes to estimation of signal in the same region in
-other networks. The powerful noise-reduction properties of BBM allows it to
-produce reliable maps of individual functional topography with moderate scan
-duration, without the need for ``dense sampling'' of individuals.
+[@mejia2020bayesian] [@mejia2022longitudinal] [@singh2025robust]. An important
+feature of the BBM priors on spatial topography is that they spatially vary
+within each network, generally showing higher inter-individual variance where
+engagement tends to exist, and lower variance in background regions.
+This allows individual differences to be expressed where they exist, while
+reducing noise in background regions. Furthermore, due to the continuous, whole-brain nature 
+of BBM network maps, noise reduction in background regions of
+one network indirectly contributes to estimation of signal in the same area of
+the brain in another network. The powerful noise-reduction properties of BBM
+allows it to produce reliable maps of individual functional topography with
+moderate scan duration, without necessarily requiring ``dense sampling'' of
+individuals (CITE Mejia et al 2020).
+
+We have several goals in this work.  First, to describe Bayesian brain mapping
+and illustrate its use, including how to produce population-derived priors and
+how to perform model fitting using the `BayesBrainMap` R package. Second, to
+establish and share high-quality population-derived priors using data from the
+HCP, based on a variety of templates (parcellations and group ICA maps at
+different resolutions). These priors can be directly adopted to perform BBM in
+studies of healthy young adults; additionally, we provide and describe the code used to
+produce them so that population-derived priors can be easily produced for
+different populations or using different templates. We also provide guidance for
+visual investigation of the priors to ensure quality. Third, using data from the
+Midnight Scan Club [@gordon2017precision], we illustrate several key strengths
+of BBM:
+1. Its ability to reveal features of individual functional topography, 
+previously revealed through extensive subject-level scanning, from a single session of data
+2. The reliability of individualized network maps with limited scan duration
+3. The applicability of externally-derived priors to smaller studies or 
+individuals from a similar population, even when acquisition protocols differ 
+from the focal study
+4. The overlapping nature of brain networks, even when using templates that enforce 
+(e.g. parcellations) or encourage (e.g. ICA) independence between networks, without 
+compromising the functional connectivity between networks
+5. The pragmatic nature of BBM, which can be quickly fit to individual sessions of data 
+once the prior has been established.
+
+
+## 2. Methods
 
 There are two steps to performing BBM, which are implemented in the
 `BayesBrainMap` R package: *(1) prior estimation* and *(2) model fitting*
-(Figure \@ref(fig:model-overview)). Here, our primary focus is creating and sharing 
-population-derived priors for using data from the HCP, based on various templates. 
-These priors can be directly used to perform BBM in studies of healthy young adults.
-To perform BBM to study individuals from other populations, or using other templates, we
-provide and describe the code used to produce the HCP-derived priors, so that
-this workflow can be easily reproduced using other datasets. We also provide
-guidance for visual investigation of the priors to ensure quality.
+(Figure \@ref(fig:model-overview)).  
 
-Finally, we illustrate the model fitting step using an individual from the HCP
-and individuals from an external study, the midnight scan club (MSC) [@gordon2017precision]. The
-MSC focuses on a similar population as the HCP but differs in acquisition
-methods. Since the population-derived priors used in BBM encode the distribution
-of signal, not noise, priors derived from one study can be applied to other
-studies with differing noise properties, as long as the populations are similar.
-We will illustrate this through application of HCP-derived priors to data from
-the MSC. Application to the MSC will also exemplify the ability of BBM to reveal
-individual features of functional topography from a single session of data,
-without the need for dense sampling.
-
-```{r model-overview, echo=FALSE, out.width="80%", fig.align='center', fig.cap="Overview of the Bayesian Brain Mapping Workflow"}
+```{r model-overview, echo=FALSE, out.width="80%", fig.align='center', fig.cap="Overview of Bayesian Brain Mapping."}
 knitr::include_graphics(file.path(dir_data, "inputs/Drawing_v1.pdf"))
 ```
 
-## 2. Methods
+Here, we first present the BBM model. We then explain how we derive
+population-derived priors using data from the HCP and how they can be accessed
+and applied, and illustrate the application of BBM to reveal individual-level
+topography and connectivity. Next, we describe our analysis of data from the
+Midnight Scan Club using HCP-derived priors, which will illustrate several
+important features of BBM.
 
 ### 2.1 The Bayesian Brain Mapping Model
 
@@ -110,7 +193,6 @@ $$
 where $s_{qv}$ is the spatial engagement of network $q$ at voxel or vertex $v$, 
 and $a_{tq}$ is the temporal activation of network $q$ at time point $t$. The vectors 
 $\mathbf{a}_t$ and $\mathbf{s}_v$ combine those values across all $Q$ networks. 
-
 The second level of the model incorporates the population-derived prior on the 
 spatial topography in ${s}_{qv}$, as described in [@mejia2020bayesian]:
 
@@ -125,7 +207,7 @@ higher computational cost [@mejia2022longitudinal]. Note that structured noise m
 exist in the data that is not well-captured by the residual noise term. While in
 ICA it is common to model structured noise as components, in BBM these are not
 included in the model because can be removed beforehand as described in 
-[@mejia2020bayesian] or via other methods like ICA-FIX.
+[@mejia2020bayesian] or via pre-processing methods like ICA-FIX.
 
 The third level of the model incorporates the population-derived prior on the
 functional connectivity between networks, which is represented by the covariance
@@ -140,18 +222,17 @@ $$
 See [@singh2025robust] for details on the population-derived prior on the
 functional connectivity. Briefly, two choices exist for this prior: the
 conjugate Inverse-Wishart distribution, or a novel Cholesky-based prior
-developed for this model, which involves sampling. The former is faster, while
-the latter has somewhat better performance but is more computationally
-intensive.
+developed for this model that more accurately encodes patterns of population variance in FC. 
+The former is faster, while the latter provides somewhat better performance at a higher computational cost.
 
 ### 2.2 Building HCP-Derived Priors
 
-Here, we build HCP-derived priors for Bayesian brain mapping using several
-different choices of template, including two different parcellations and group
+Here, we describe construction of HCP-derived priors for Bayesian brain mapping using several
+different choices of template. These include two different parcellations and group
 ICA maps (Table \@ref(tab:template-summary)). Specifically, we use the
 17-network Yeo parcellation [@yeo2011organization], the MSC group parcellation
-[@gordon2017precision], and the HCP group ICA maps
-with 15, 25, and 50 components [@smith2013functional]. For each template, we build priors with and
+[@gordon2017precision], and HCP-derived group ICA maps
+with 15 to 50 components [@smith2013functional]. For each template, we build priors with and
 without global signal regression (GSR), since whether or not to perform GSR is
 an important choice that remains the subject of debate.
 
@@ -349,6 +430,21 @@ data_OSF/priors_plots/GICA25/LR/noGSR/
 data_OSF/priors_plots/Yeo17/RL/GSR/
 ...
 ```
+
+### MSC Data
+
+To illustrate the applicability of BBM when using externally-derived priors, we analyze
+data from the Midnight Scan Club (MSC) (CITE Gordon et al 2017).  The MSC studies on a similar population as the HCP, healthy young adults, but the two datasets
+differ in acquisition methods. Since the population-derived priors used in BBM
+encode the distribution of signal, not noise, priors derived from one study can
+be applied to other studies with differing noise properties, as long as the
+populations are similar. We illustrate this through application of
+HCP-derived priors to data from the MSC. Application to the MSC will also
+exemplify the ability of BBM to reveal individual features of functional
+topography from just a single session of data.
+
+
+## Results
 
 ### 5.3 Visual Summary of Priors
 
