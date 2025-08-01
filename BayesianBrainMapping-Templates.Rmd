@@ -1,7 +1,7 @@
 ---
 title: "Individualized functional topographic mapping with the BayesBrainMap R package
   and population-derived priors"
-author: "Nohelia Da Silva Sanchez, Damon D. Pham, Ellyn Butler, Amanda F. Mejia"
+author: "Nohelia Da Silva Sanchez, Damon D. Pham, Ellyn Butler, Mary Beth Nebel, Amanda F. Mejia"
 date: "2025-05-07"
 output:
   bookdown::html_document2:
