@@ -66,25 +66,31 @@ plot(mparc,
     title = "MSC Network Parcellation"
 )
 
+# Save parcellation
+saveRDS(
+  mparc,
+  file.path(dir_data, "outputs", "MSC_parcellation.rds")
+)
+
 # Plot every network separately
 
-for (parc in 1:17) {
+# for (parc in 1:17) {
     
-  parc_copy <- mparc
-  curr_color <- network_df[network_df$value == parc, "color"]
-  rgb_vals <- col2rgb(curr_color)
-  labels_table <- parc_copy$meta$cifti$labels[[1]]
-  labels_table[, 2:4] <- matrix(1, nrow = nrow(labels_table), ncol = 3)
-  labels_table[labels_table$Key == parc, 2:4] <- t(rgb_vals / 255)
-  parc_copy$meta$cifti$labels[[1]] <- labels_table
-  label_name <- network_df[network_df$value == parc, "name"]
-  plot_title <- paste0("MSC Network ", label_name, " (#", parc, ")")
+#   parc_copy <- mparc
+#   curr_color <- network_df[network_df$value == parc, "color"]
+#   rgb_vals <- col2rgb(curr_color)
+#   labels_table <- parc_copy$meta$cifti$labels[[1]]
+#   labels_table[, 2:4] <- matrix(1, nrow = nrow(labels_table), ncol = 3)
+#   labels_table[labels_table$Key == parc, 2:4] <- t(rgb_vals / 255)
+#   parc_copy$meta$cifti$labels[[1]] <- labels_table
+#   label_name <- network_df[network_df$value == parc, "name"]
+#   plot_title <- paste0("MSC Network ", label_name, " (#", parc, ")")
 
-  plot(
-    parc_copy,
-    fname = file.path(out_dir, paste0("MSC_", gsub(" ", "_", label_name), ".png")),
-    title = plot_title
-  )
-}
+#   plot(
+#     parc_copy,
+#     fname = file.path(out_dir, paste0("MSC_", gsub(" ", "_", label_name), ".png")),
+#     title = plot_title
+#   )
+# }
 
 

@@ -84,14 +84,14 @@ estimate_and_export_prior <- function(
     # MSC
     } else if (nIC == 1) {
 
-        GICA <- file.path(dir_data, "inputs", "Networks_template.dscalar.nii")
+        GICA <- readRDS(file.path(dir_data, "outputs", "MSC_parcellation.rds"))
 
         prior <- estimate_prior(
                 BOLD = BOLD_paths1,
                 BOLD2 = BOLD_paths2,
                 template = GICA,
                 GSR = GSR,
-                TR = TR_HCP,
+                TR = 2.2,
                 hpf = 0.01,
                 Q2 = 0,
                 Q2_max = NULL,
