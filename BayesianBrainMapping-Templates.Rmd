@@ -445,8 +445,8 @@ cat('
   <tr>
     <td>MSC Default</td>
     <td><img src="data_OSF/outputs/parcellations_plots/MSC/MSC_Default_cropped.png" width="120"/></td>
-    <td><img src="data_OSF/outputs/priors_plots/MSC/combined/GSR/prior_combined_MSC_GSR_Default_mean.png" width="120"/></td>
-    <td><img src="data_OSF/outputs/priors_plots/MSC/combined/GSR/prior_combined_MSC_GSR_Default_sd.png" width="120"/></td>
+    <td><img src="data_OSF/outputs/priors_plots/MSC/combined/GSR/prior_combined_MSC_GSR_Default_mean_cropped.png" width="120"/></td>
+    <td><img src="data_OSF/outputs/priors_plots/MSC/combined/GSR/prior_combined_MSC_GSR_Default_sd_cropped.png" width="120"/></td>
   </tr>
   
   <tr>
