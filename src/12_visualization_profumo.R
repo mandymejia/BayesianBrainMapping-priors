@@ -8,6 +8,8 @@ convert_to_dscalar(
 
 profumo_obj <- read_cifti(profumo_ds)
 
+profumo_obj <- remove_xifti(profumo_obj, remove = "subcortical")
+
 # Medial wall mask
 mwall_path <- file.path(dir_data, "inputs", "Human.MedialWall_Conte69.32k_fs_LR.dlabel.nii")
 mwall_cifti <- read_cifti(mwall_path)
@@ -39,3 +41,18 @@ for (parc in 1:12) {
     zlim = c(-0.5, 2.5)
   )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
