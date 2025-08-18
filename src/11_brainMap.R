@@ -1,7 +1,7 @@
-remove.packages("BayesBrainMap")
+# remove.packages("BayesBrainMap")
 
-devtools::install_github("mandymejia/BayesBrainMap", "2.0")
-library(BayesBrainMap)
+# devtools::install_github("mandymejia/BayesBrainMap", "2.0")
+# library(BayesBrainMap)
 
 run_brainmap_for_subject <- function(subject) {
 # run_brainmap_for_subject <- function(prior_path, subject) {
@@ -30,7 +30,9 @@ run_brainmap_for_subject <- function(subject) {
     # )
 
     # saveRDS(bMap, file.path(bm_dir, paste0(subject, "_", session, "_bMap.rds")))
-    bMap <- readRDS(file.path(bm_dir, paste0(subject, "_", session, "_bMap.rds")))
+    path <- file.path(bm_dir, paste0(subject, "_", session, "_bMap.rds"))
+    cat("path:", path, "\n ")
+    bMap <- readRDS(path)
 
     eng <- engagements(
       bMap,
@@ -46,7 +48,7 @@ run_brainmap_for_subject <- function(subject) {
 }
 
 
-for (i in 1:10) {
+for (i in 2:10) {
   subject_id <- sprintf("sub-MSC%02d", i)
   cat("Running:", subject_id, "\n")
   run_brainmap_for_subject(subject_id)

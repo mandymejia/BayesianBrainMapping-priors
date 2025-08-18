@@ -113,7 +113,7 @@ for (i in seq_along(parcel_ids)) {
 
 cor <- cor(one_hot)
 
-parcel_names <- rownames(parcellation$meta$cifti$labels$parcels)[parcellation$meta$cifti$labels$parcels$Key > 0]
+parcel_names <- rownames(parcellation$meta$cifti$labels$`Column number`)[parcellation$meta$cifti$labels$parcels$Key > 0]
 rownames(cor) <- parcel_names
 colnames(cor) <- parcel_names
 
