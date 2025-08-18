@@ -620,10 +620,18 @@ This example uses:
 prior <- readRDS("priors/Yeo17/prior_combined_Yeo17_GSR.rds")
 
 # Load subject fMRI data (CIFTI format)
-BOLD <- c(file.path(dir_data, "inputs", 
+BOLD_1 <- c(file.path(dir_data, "inputs", 
+                    "rfMRI_REST1_LR_Atlas_MSMAll_hp2000_clean.dtseries.nii"))
+
+BOLD_4 <- c(file.path(dir_data, "inputs", 
                     "rfMRI_REST1_LR_Atlas_MSMAll_hp2000_clean.dtseries.nii"),
           file.path(dir_data, "inputs", 
-                    "rfMRI_REST1_RL_Atlas_MSMAll_hp2000_clean.dtseries.nii"))
+                    "rfMRI_REST1_RL_Atlas_MSMAll_hp2000_clean.dtseries.nii"),
+          file.path(dir_data, "inputs", 
+                    "rfMRI_REST2_LR_Atlas_MSMAll_hp2000_clean.dtseries.nii"),
+          file.path(dir_data, "inputs", 
+                    "rfMRI_REST2_RL_Atlas_MSMAll_hp2000_clean.dtseries.nii"))
+
 ```
 
 The fMRI input must be a CIFTI, NIFTI, or matrix object compatible with the prior.
@@ -633,12 +641,67 @@ The fMRI input must be a CIFTI, NIFTI, or matrix object compatible with the prio
 Once the data is loaded, we fit the Bayesian brain mapping model to obtain individualized functional networks aligned to the prior components:
 
 ```{r warning=FALSE, eval=FALSE}
+# 1 session
 bMap <- BrainMap(
-  BOLD = BOLD,
+  BOLD = BOLD_1,
   prior = prior,
   TR = 0.72,
   drop_first = 15
   )
+```
+
+```{r, eval=FALSE, echo=FALSE}
+for (i in 1:17) {
+  label_name <- rownames(prior$template_parc_table)[prior$template_parc_table$Key == i]
+  title <- paste0("Yeo 17 Network ", label_name, " (#", i, ") Subject-Level Mean") 
+  fname <- file.path(dir_data, "outputs", "brain_map", "Yeo_17", "single_session",
+                     paste0("posterior_Yeo17_", label_name))
+  plot(bMap, idx = i, stat = "mean", title = title,
+     fname_suffix="idx", fname=fname, zlim=c(-0.2, 0.2)) 
+}
+```
+
+```{r, eval=FALSE, echo=FALSE}
+for (i in 1:17) {
+  label_name <- rownames(prior$template_parc_table)[prior$template_parc_table$Key == i]
+  title <- paste0("Yeo 17 Network ", label_name, " (#", i, ") Subject-Level Mean") 
+  fname <- file.path(dir_data, "outputs", "brain_map", "Yeo_17", "single_session",
+                     paste0("posterior_Yeo17_", label_name))
+  plot(bMap, idx = i, stat = "se", title = title,
+     fname_suffix="idx", fname=fname, zlim=c(-0.02, 0.02))  
+}
+```
+
+```{r warning=FALSE, eval=FALSE}
+# 4 sessions
+bMap <- BrainMap(
+  BOLD = BOLD_4,
+  prior = prior,
+  TR = 0.72,
+  drop_first = 15
+  )
+```
+
+```{r, eval=FALSE, echo=FALSE}
+for (i in 1:17) {
+  label_name <- rownames(prior$template_parc_table)[prior$template_parc_table$Key == i]
+  title <- paste0("Yeo 17 Network ", label_name, " (#", i, ") Subject-Level Mean") 
+  fname <- file.path(dir_data, "outputs", "brain_map", "Yeo_17", "four_sessions",
+                     paste0("posterior_Yeo17_", label_name))
+  plot(bMap, idx = i, stat = "mean", title = title,
+     fname_suffix="idx", fname=fname,  zlim=c(-0.2, 0.2)) 
+}
+```
+
+```{r, eval=FALSE, echo=FALSE}
+for (i in 1:17) {
+  label_name <- rownames(prior$template_parc_table)[prior$template_parc_table$Key == i]
+  title <- paste0("Yeo 17 Network ", label_name, " (#", i, ") Subject-Level Mean") 
+  fname <- file.path(dir_data, "outputs", "brain_map", "Yeo_17", "four_sessions",
+                     paste0("posterior_Yeo17_", label_name))
+  plot(bMap, idx = i, stat = "se", title = title,
+     fname_suffix="idx", fname=fname,  zlim=c(-0.02, 0.02)) 
+}
 ```
 
 #### 6.3 Identify Engagement Maps
@@ -667,7 +730,7 @@ For all outputs, we only visualize ContA network from the Yeo 17 parcellation.
 for (i in 1:17) {
   label_name <- rownames(prior$template_parc_table)[prior$template_parc_table$Key == i]
   title <- paste0("Yeo 17 Network ", label_name, " (#", i, ") Subject-Level Mean") 
-  fname <- file.path(dir_data, "outputs", "subject_maps", 
+  fname <- file.path(dir_data, "outputs", "brain_map", "Yeo_17", "single_session",
                      paste0("posterior_Yeo17_", label_name))
   plot(bMap, idx = i, stat = "mean", title = title,
      fname_suffix="idx", fname=fname) 
