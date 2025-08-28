@@ -2,7 +2,7 @@
 
 # Example func call: estimate_and_export_prior("LR", 15, FALSE, dir_data, TR_HCP)
 # encoding is "LR" / "RL" / "combined"
-# nIC is 15 / 25 / 50, 0 meaning it is going to use the Yeo17 parcellation, or 1 meaning MSC parcellation
+# nIC is 15 / 25 / 50, 0 meaning it is going to use the Yeo17 parcellation, 1 meaning MSC parcellation, or 2 meaning PROFUMO parcellation
 # GSR is TRUE / FALSE
 estimate_and_export_prior <- function(
   encoding,

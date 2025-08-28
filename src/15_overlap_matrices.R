@@ -1,3 +1,22 @@
+#latest
+
+# remove.packages("fMRItools")
+# devtools::install_github("mandymejia/fMRItools", "7.0")
+# library(fMRItools)
+
+
+# remove.packages("BayesBrainMap")
+# devtools::install_github("mandymejia/BayesBrainMap", "2.0")
+# library(BayesBrainMap)
+
+# library(ggplot2)
+# library(scales)
+
+cols <- ciftiTools::ROY_BIG_BL()
+jet_diverging <- function(limits=c(-1,1), ...) {
+  ggplot2::scale_fill_gradientn(colours=rev(cols$color), values=cols$value, limits=limits, ...)
+}
+
 # SPATIAL OVERLAP MATRICES - YEO 17
 
 # PARCELLATION
@@ -18,8 +37,24 @@ for (i in seq_along(parcel_ids)) {
 
 mat <- cor(one_hot)
 
+
 labs <- rownames(parcellation$meta$cifti$labels$parcels)[parcellation$meta$cifti$labels$parcels$Key > 0]
-p <- plot_FC_gg(mat, title= "", labs=labs)
+# p <- plot_FC_gg(mat, title= "", labs=labs)
+
+p <- plot_FC_gg(
+  mat,
+  colFUN    = jet_diverging,
+  labs      = labs,
+  lim       = 0.5,
+  title="",
+) +
+  theme(
+    legend.title = element_blank(),
+    legend.text  = element_text(size = 14),
+    legend.key.height = unit(2, "cm"), # relative way
+    legend.key.width  = unit(0.6, "cm")
+  )
+
 ggplot2::ggsave(file.path(dir_data, "outputs", "overlap_matrices", "Yeo17_parcellation_overlap.png"), plot = p, bg = "white") 
 
 # PRIOR
@@ -28,7 +63,20 @@ prior <- readRDS(file.path(dir_project, "priors", "Yeo17", "prior_combined_Yeo17
 mat <- cor(prior$prior$mean)
 
 parcel_names <- rownames(prior$template_parc_table)[prior$template_parc_table$Key > 0]
-p <- plot_FC_gg(mat, title= "", labs=parcel_names)
+# p <- plot_FC_gg(mat, title= "", labs=parcel_names)
+p <- plot_FC_gg(
+  mat,
+  colFUN    = jet_diverging,
+  labs      = labs,
+  lim       = 0.5,
+  title=""
+) +
+  theme(
+    legend.title = element_blank(),
+    legend.text  = element_text(size = 14),
+    legend.key.height = unit(2, "cm"),
+    legend.key.width  = unit(0.6, "cm")
+  )
 ggplot2::ggsave(file.path(dir_data, "outputs", "overlap_matrices", "Yeo17_prior_overlap.png"), plot = p, bg = "white") 
 
 
@@ -54,7 +102,20 @@ mat <- cor(one_hot)
 
 tab  <- parcellation$meta$cifti$labels$`Column number`
 labs <- rownames(tab)[tab$Key > 0]
-p <- plot_FC_gg(mat, title= "", labs=labs)
+# p <- plot_FC_gg(mat, title= "", labs=labs)
+p <- plot_FC_gg(
+  mat,
+  colFUN    = jet_diverging,
+  labs      = labs,
+  lim       = 0.5,
+  title=""
+) +
+  theme(
+    legend.title = element_blank(),
+    legend.text  = element_text(size = 14),
+    legend.key.height = unit(2, "cm"),
+    legend.key.width  = unit(0.6, "cm")
+  )
 ggplot2::ggsave(file.path(dir_data, "outputs", "overlap_matrices", "MSC_parcellation_overlap.png"), plot = p, bg = "white") 
 
 # PRIOR
@@ -62,7 +123,19 @@ prior <- readRDS(file.path(dir_project, "priors", "MSC", "prior_combined_MSC_GSR
 mat <- cor(prior$prior$mean)
 mat <- mat[2:18, 2:18]
 labs <- rownames(prior$template_parc_table)[prior$template_parc_table$Key > 0]
-p <- plot_FC_gg(mat, title= "", labs=labs)
+# p <- plot_FC_gg(mat, title= "", labs=labs)
+p <- plot_FC_gg(
+  mat,
+  colFUN    = jet_diverging,
+  labs      = labs,
+  lim       = 0.5,
+  title=""
+) + theme(
+    legend.title = element_blank(),
+    legend.text  = element_text(size = 14),
+    legend.key.height = unit(2, "cm"),
+    legend.key.width  = unit(0.6, "cm")
+  )
 ggplot2::ggsave(file.path(dir_data, "outputs", "overlap_matrices", "MSC_prior_overlap.png"), plot = p, bg = "white") 
 
 
@@ -87,7 +160,19 @@ for (i in seq_along(labels)) {
 mat <- cor(one_hot)
 
 labs <- paste0("IC", 1:15)
-p <- plot_FC_gg(mat, title= "", labs=labs)
+# p <- plot_FC_gg(mat, title= "", labs=labs)
+p <- plot_FC_gg(
+  mat,
+  colFUN    = jet_diverging,
+  labs      = labs,
+  lim       = 0.5,
+  title=""
+) + theme(
+    legend.title = element_blank(),
+    legend.text  = element_text(size = 14),
+    legend.key.height = unit(2, "cm"),
+    legend.key.width  = unit(0.6, "cm")
+  )
 ggplot2::ggsave(file.path(dir_data, "outputs", "overlap_matrices", "GICA15_parcellation_overlap.png"), plot = p, bg = "white")
 
 
@@ -95,7 +180,19 @@ ggplot2::ggsave(file.path(dir_data, "outputs", "overlap_matrices", "GICA15_parce
 prior <- readRDS(file.path(dir_project, "priors", "GICA15", "prior_combined_GICA15_GSR.rds"))
 mat <- cor(prior$prior$mean)
 labs <- paste0("IC", 1:15)
-p <- plot_FC_gg(mat, title= "", labs=labs)
+# p <- plot_FC_gg(mat, title= "", labs=labs)
+p <- plot_FC_gg(
+  mat,
+  colFUN    = jet_diverging,
+  labs      = labs,
+  lim       = 0.5,
+  title=""
+) + theme(
+    legend.title = element_blank(),
+    legend.text  = element_text(size = 14),
+    legend.key.height = unit(2, "cm"),
+    legend.key.width  = unit(0.6, "cm")
+  )
 ggplot2::ggsave(file.path(dir_data, "outputs", "overlap_matrices", "GICA15_prior_overlap.png"), plot = p, bg = "white") 
 
 
@@ -121,12 +218,36 @@ mat <- cor(one_hot)
 
 tab  <- parcellation$meta$cifti$labels$`Column number`
 labs <- paste0("Network ", 1:12)
-p <- plot_FC_gg(mat, title= "", labs=labs)
+# p <- plot_FC_gg(mat, title= "", labs=labs)
+p <- plot_FC_gg(
+  mat,
+  colFUN    = jet_diverging,
+  labs      = labs,
+  lim       = 0.5,
+  title=""
+) + theme(
+    legend.title = element_blank(),
+    legend.text  = element_text(size = 14),
+    legend.key.height = unit(2, "cm"),
+    legend.key.width  = unit(0.6, "cm")
+  )
 ggplot2::ggsave(file.path(dir_data, "outputs", "overlap_matrices", "PROFUMO_parcellation_overlap.png"), plot = p, bg = "white")
 
 # PRIOR
 prior <- readRDS(file.path(dir_project, "priors", "PROFUMO", "prior_combined_PROFUMO_GSR.rds"))
 mat <- cor(prior$prior$mean)
 labs <- paste0("Network ", 1:ncol(prior$prior$mean))
-p <- plot_FC_gg(mat, title= "", labs=labs)
+# p <- plot_FC_gg(mat, title= "", labs=labs)
+p <- plot_FC_gg(
+  mat,
+  colFUN    = jet_diverging,
+  labs      = labs,
+  lim       = 0.5,
+  title=""
+) + theme(
+    legend.title = element_blank(),
+    legend.text  = element_text(size = 14),
+    legend.key.height = unit(2, "cm"),
+    legend.key.width  = unit(0.6, "cm")
+  )
 ggplot2::ggsave(file.path(dir_data, "outputs", "overlap_matrices", "PROFUMO_prior_overlap.png"), plot = p, bg = "white") 

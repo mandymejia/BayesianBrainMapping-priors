@@ -414,44 +414,44 @@ cat('
   </tr>
   <tr>
     <td>Yeo17 DefaultA</td>
-    <td><img src="data_OSF/outputs/parcellations_plots/Yeo17/Yeo17_DefaultA_cropped.png" width="120"/></td>
-    <td><img src="data_OSF/outputs/priors_plots/Yeo17/combined/GSR/prior_combined_Yeo17_GSR_DefaultA_mean_cropped.png" width="120"/></td>
-    <td><img src="data_OSF/outputs/priors_plots/Yeo17/combined/GSR/prior_combined_Yeo17_GSR_DefaultA_sd_cropped.png" width="120"/></td>
+    <td><img src="/Users/nohelia/Desktop/Figure2/Yeo17_DefaultA_cropped.png" width="120"/></td>
+    <td><img src="/Users/nohelia/Desktop/Figure2/Yeo17_DefaultA_mean.png" width="120"/></td>
+    <td><img src="/Users/nohelia/Desktop/Figure2/Yeo17_DefaultA_sd.png" width="120"/></td>
   </tr>
   
   <tr>
     <td>GICA15 IC 2</td>
-    <td><img src="data_OSF/outputs/parcellations_plots/GICA15/GICA15_IC2_cropped.png" width="120"/></td>
-    <td><img src="data_OSF/outputs/priors_plots/GICA15/combined/GSR/prior_combined_GICA15_GSR_IC2_mean_cropped.png" width="120"/></td>
-    <td><img src="data_OSF/outputs/priors_plots/GICA15/combined/GSR/prior_combined_GICA15_GSR_IC2_sd_cropped.png" width="120"/></td>
+    <td><img src="/Users/nohelia/Desktop/Figure2/GICA15_IC2.png" width="120"/></td>
+    <td><img src="/Users/nohelia/Desktop/Figure2/GICA15_IC2_mean.png" width="120"/></td>
+    <td><img src="/Users/nohelia/Desktop/Figure2/GICA15_IC2_sd.png" width="120"/></td>
   </tr>
   
   <tr>
     <td>GICA25 IC 2</td>
-    <td><img src="data_OSF/outputs/parcellations_plots/GICA25/GICA25_IC2_cropped.png" width="120"/></td>
-    <td><img src="data_OSF/outputs/priors_plots/GICA25/combined/GSR/prior_combined_GICA25_GSR_IC2_mean_cropped.png" width="120"/></td>
-    <td><img src="data_OSF/outputs/priors_plots/GICA25/combined/GSR/prior_combined_GICA25_GSR_IC2_sd_cropped.png" width="120"/></td>
+    <td><img src="/Users/nohelia/Desktop/Figure2/GICA25_IC2.png" width="120"/></td>
+    <td><img src="/Users/nohelia/Desktop/Figure2/GICA25_IC2_mean.png" width="120"/></td>
+    <td><img src="/Users/nohelia/Desktop/Figure2/GICA25_IC2_sd.png" width="120"/></td>
   </tr>
   
   <tr>
     <td>GICA50 IC 12</td>
-    <td><img src="data_OSF/outputs/parcellations_plots/GICA50/GICA50_IC12_cropped.png" width="120"/></td>
-    <td><img src="data_OSF/outputs/priors_plots/GICA50/combined/GSR/prior_combined_GICA50_GSR_IC12_mean_cropped.png" width="120"/></td>
-    <td><img src="data_OSF/outputs/priors_plots/GICA50/combined/GSR/prior_combined_GICA50_GSR_IC12_sd_cropped.png" width="120"/></td>
+    <td><img src="/Users/nohelia/Desktop/Figure2/GICA50_IC12.png" width="120"/></td>
+    <td><img src="/Users/nohelia/Desktop/Figure2/GICA50_IC12_mean.png" width="120"/></td>
+    <td><img src="/Users/nohelia/Desktop/Figure2/GICA50_IC12_sd.png" width="120"/></td>
   </tr>
   
   <tr>
     <td>MSC Default</td>
-    <td><img src="data_OSF/outputs/parcellations_plots/MSC/MSC_Default_cropped.png" width="120"/></td>
-    <td><img src="data_OSF/outputs/priors_plots/MSC/combined/GSR/prior_combined_MSC_GSR_Default_mean_cropped.png" width="120"/></td>
-    <td><img src="data_OSF/outputs/priors_plots/MSC/combined/GSR/prior_combined_MSC_GSR_Default_sd_cropped.png" width="120"/></td>
+    <td><img src="/Users/nohelia/Desktop/Figure2/MSC_Default_cropped.png" width="120"/></td>
+    <td><img src="/Users/nohelia/Desktop/Figure2/MSC_Default_mean.png" width="120"/></td>
+    <td><img src="/Users/nohelia/Desktop/Figure2/MSC_Default_sd.png" width="120"/></td>
   </tr>
   
   <tr>
     <td>PROFUMO 8</td>
-    <td><img src="data_OSF/outputs/parcellations_plots/PROFUMO/PROFUMO_08_cropped.png" width="120"/></td>
-    <td><img src="data_OSF/outputs/priors_plots/PROFUMO/combined/GSR/prior_combined_PROFUMO_GSR_8_mean_cropped.png" width="120"/></td>
-    <td><img src="data_OSF/outputs/priors_plots/PROFUMO/combined/GSR/prior_combined_PROFUMO_GSR_8_sd_cropped.png" width="120"/></td>
+    <td><img src="/Users/nohelia/Desktop/Figure2/PROFUMO_8.png" width="120"/></td>
+    <td><img src="/Users/nohelia/Desktop/Figure2/PROFUMO_8_mean.png" width="120"/></td>
+    <td><img src="/Users/nohelia/Desktop/Figure2/PROFUMO_8_sd.png" width="120"/></td>
   </tr>
   
 </table>
@@ -465,7 +465,7 @@ cat('
 <table style="border-collapse: collapse; margin: auto; text-align: center;" border="1">
   <style>
     table td, table th {
-      padding: 6px;
+      padding: 2px;
     }
   </style>
   <tr>
@@ -666,7 +666,7 @@ This example uses:
 
 ```{r warning=FALSE, eval=FALSE}
 # Load population prior 
-prior <- readRDS("priors/Yeo17/prior_combined_Yeo17_GSR.rds")
+prior <- readRDS("priors/Yeo17/prior_combined_Yeo17_noGSR.rds")
 
 # Load subject fMRI data (CIFTI format)
 BOLD_1 <- c(file.path(dir_data, "inputs", 
@@ -696,6 +696,10 @@ bMap_1 <- BrainMap(
   TR = 0.72,
   drop_first = 15
   )
+```
+
+```{r,eval=FALSE, echo=FALSE}
+saveRDS(bMap_1, file.path(dir_data, "outputs", "brain_map", "Yeo17", "single_session", "brainMap_1session.rds"))
 ```
 
 ```{r, eval=FALSE, echo=FALSE}
@@ -729,7 +733,16 @@ bMap_4 <- BrainMap(
   )
 ```
 
+```{r,eval=FALSE, echo=FALSE}
+saveRDS(bMap_4, file.path(dir_data, "outputs", "brain_map", "Yeo17", "four_sessions", "brainMap_4sessions.rds"))
+```
+
+```{r,eval=FALSE}
+# TODO: plotting code for each one interactive (total 4)
+```
+
 ```{r, eval=FALSE, echo=FALSE}
+# run next
 for (i in 1:17) {
   label_name <- rownames(prior$template_parc_table)[prior$template_parc_table$Key == i]
   title <- paste0("Yeo 17 ", label_name, " Mean (4 sessions)") 
@@ -758,8 +771,8 @@ p_mean_4 <- file.path(dir_data, "outputs", "brain_map", "Yeo17", "four_sessions"
 p_se_4   <- file.path(dir_data, "outputs", "brain_map", "Yeo17", "four_sessions", "posterior_Yeo17_DefaultA_se.png")
 
 knitr::include_graphics(p_mean_1)
-knitr::include_graphics(p_se_1)
 knitr::include_graphics(p_mean_4)
+knitr::include_graphics(p_se_1)
 knitr::include_graphics(p_se_4)
 ```
 
@@ -775,18 +788,29 @@ First, we compute engagements from the four-session brain map, `bMap_4` using `e
 
 - `type = '>'`
 
-- `method_p = 'BH'` (Benjamini & Hochberg)
+- `method_p = 'bonferroni'`
+
+```{r,eval=FALSE, echo=FALSE}
+bMap_4 <- readRDS(file.path(dir_data, "outputs", "brain_map", "Yeo17", "four_sessions", "brainMap_4sessions.rds"))
+```
 
 ```{r warning=FALSE, eval=FALSE}
 eng <- engagements(
-  bMap = bMap_4
+  bMap = bMap_4,
+  method_p = 'bonferroni'
   )
 ```
+
+```{r,eval=FALSE, echo=FALSE}
+saveRDS(eng, file.path(dir_data, "outputs", "brain_map", "Yeo17", "four_sessions", "engagements_4sessions.rds"))
+```
+
+
 
 ```{r, eval=FALSE, echo=FALSE}
 for (i in 1:17) {
   label_name <- rownames(prior$template_parc_table)[prior$template_parc_table$Key == i]
-  title <- paste0("Yeo 17 ", label_name, " Engagement Map (no z-threshold)")  
+  title <- paste0("Yeo 17 ", label_name, " Engagements")  
   fname <- file.path(dir_data, "outputs", "brain_map", "Yeo17", "four_sessions",
                      paste0("default_subject_Yeo17_", label_name))
   plot(eng, idx = i, stat = "engaged", title = title,
@@ -810,7 +834,8 @@ Second, we compute engagements with z = 1,3,5 while keeping all other parameters
 ```{r warning=FALSE, eval=FALSE}
 eng_multipleZ <- engagements(
   bMap = bMap_4,
-  z = c(1,3,5)
+  method_p = 'bonferroni',
+  z = c(1,5)
   )
 ```
 
@@ -821,7 +846,7 @@ saveRDS(eng_multipleZ, file.path(dir_data, "outputs", "brain_map", "Yeo17", "fou
 ```{r, eval=FALSE, echo=FALSE}
 for (i in 1:17) {
   label_name <- rownames(prior$template_parc_table)[prior$template_parc_table$Key == i]
-  title <- paste0("Yeo 17 ", label_name, " Engagement Map (z=1,3,5)")  
+  title <- paste0("Yeo 17 ", label_name, " Engagements")  
   fname <- file.path(dir_data, "outputs", "brain_map", "Yeo17", "four_sessions",
                      paste0("subject_Yeo17_", label_name))
   plot(eng_multipleZ, idx = i, stat = "engaged", title = title,

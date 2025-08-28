@@ -1,17 +1,18 @@
 
 # Plots Functional Connectivity (FC) priors for each prior using both the Cholesky and Inverse-Wishart parameterization
-
+#latest
 
 remove.packages("fMRItools")
 devtools::install_github("mandymejia/fMRItools", "7.0")
 library(fMRItools)
-
 
 remove.packages("BayesBrainMap")
 devtools::install_github("mandymejia/BayesBrainMap", "2.0")
 library(BayesBrainMap)
 
 prior_files <- list.files(file.path(dir_project, "priors"), recursive = TRUE, full.names = TRUE)
+
+prior_files <- prior_files[grepl("combined", prior_files) & grepl("noGSR", prior_files)]
 
 get_prior_title <- function(base_name, encoding) {
   gsr <- if (grepl("noGSR", base_name)) "noGSR" else "GSR"
@@ -30,7 +31,7 @@ get_prior_title <- function(base_name, encoding) {
   paste0("GICA ", nIC, " ", gsr)
 }
 
-for (file in prior_files_combined) {
+for (file in prior_files) {
     cat("Processing prior:", file, "\n")
     prior <- readRDS(file)
     
@@ -43,10 +44,12 @@ for (file in prior_files_combined) {
       labs <- rownames(prior$template_parc_table)[prior$template_parc_table$Key > 0]
     } else if (grepl("MSC", base_name, ignore.case = TRUE)) {
       # change FC dim
-      prior$prior$FC_Chol$FC_samp_mean <- prior$prior$FC_Chol$FC_samp_mean[2:18, 2:18, drop=FALSE]
-      prior$prior$FC_Chol$FC_samp_var  <- prior$prior$FC_Chol$FC_samp_var[2:18, 2:18, drop=FALSE]
-      prior$prior$FC$mean_empirical <- prior$prior$FC$mean_empirical[2:18, 2:18, drop=FALSE]
-      prior$prior$FC$var_empirical  <- prior$prior$FC$var_empirical[2:18, 2:18, drop=FALSE]
+      prior$prior$FC$Chol$mean <- prior$prior$FC$Chol$mean[2:18, 2:18, drop=FALSE]
+      prior$prior$FC$Chol$var  <- prior$prior$FC$Chol$var[2:18, 2:18, drop=FALSE]
+      prior$prior$FC$IW$mean <- prior$prior$FC$IW$mean[2:18, 2:18, drop=FALSE]
+      prior$prior$FC$IW$var  <- prior$prior$FC$IW$var[2:18, 2:18, drop=FALSE]
+      prior$prior$FC$empirical$mean <- prior$prior$FC$empirical$mean[2:18, 2:18, drop=FALSE]
+      prior$prior$FC$empirical$var  <- prior$prior$FC$empirical$var[2:18, 2:18, drop=FALSE]
       labs <- rownames(prior$template_parc_table)[prior$template_parc_table$Key > 0]
     } else if (grepl("PROFUMO", base_name, ignore.case = TRUE)) {
       labs <- paste0("Network ", 1:12)
@@ -67,28 +70,64 @@ for (file in prior_files_combined) {
     Q <- dim(prior$prior$mean)[2]
     plot_title <- get_prior_title(base_name, encoding)
 
-    p1 <- plot(prior, what="FC", FC_method = "Chol", stat="mean", labs = labs,
-        title = paste0(plot_title, " Cholesky FC Prior"))
+    # p1 <- plot(prior, what="FC", FC_method = "Chol", stat="mean", labs = labs,
+    #     title = paste0(plot_title, " Cholesky FC Prior"))
+    p1 <- plot_FC_gg(
+      prior$prior$FC$Chol$mean,
+      labs      = labs,
+      lim = c(-0.8, 0.8),
+      title=paste0(plot_title, " Cholesky FC Prior Mean")
+    )
     ggplot2::ggsave(file.path(out_dir, paste0(base_name, "_FC_Cholesky_mean.png")), plot = p1, bg = "white")
 
-    p2 <-plot(prior, what="FC",  FC_method = "Chol", stat="sd", labs = labs, 
-        title = paste0(plot_title, " Cholesky FC Prior"))
+    # p2 <-plot(prior, what="FC",  FC_method = "Chol", stat="sd", labs = labs, 
+    #     title = paste0(plot_title, " Cholesky FC Prior"))
+    p2 <- plot_FC_gg(
+      sqrt(prior$prior$FC$Chol$var),
+      labs      = labs,
+      lim = c(0, 0.4),
+      title=paste0(plot_title, " Cholesky FC Prior SD")
+    ) 
     ggplot2::ggsave(file.path(out_dir, paste0(base_name, "_FC_Cholesky_sd.png")), plot = p2, bg = "white") 
 
     # p3 <-plot(prior, what="FC",  FC_method = "IW", stat="mean", labs = labs, 
-    #     title = paste0(plot_title, "Inverse-Wishart FC Prior Mean"))
-    # ggplot2::ggsave(file.path(out_dir, paste0(base_name, "_FC_IW_mean.png")), plot = p3, bg = "white")
+    #     title = paste0(plot_title, " Inverse-Wishart FC Prior Mean"))
+    p3 <- plot_FC_gg(
+      prior$prior$FC$IW$mean,
+      labs      = labs,
+      lim = c(-0.8, 0.8),
+      title=paste0(plot_title, " Inverse-Wishart FC Prior Mean")
+    )
+    ggplot2::ggsave(file.path(out_dir, paste0(base_name, "_FC_IW_mean.png")), plot = p3, bg = "white")
 
     # p4 <- plot(prior, what="FC",  FC_method = "IW", stat="sd", labs = labs, 
     #     title = paste0(plot_title, "Inverse-Wishart FC Prior SD"))
-    # ggplot2::ggsave(file.path(out_dir, paste0(base_name, "_FC_IW_sd.png")), plot = p4, bg = "white")
+    p4 <- plot_FC_gg(
+      sqrt(prior$prior$FC$IW$var),
+      labs      = labs,
+      lim = c(0, 0.4),
+      title=paste0(plot_title, " Inverse-Wishart FC Prior SD")
+    )
+    ggplot2::ggsave(file.path(out_dir, paste0(base_name, "_FC_IW_sd.png")), plot = p4, bg = "white")
 
-    p5 <- plot(prior, what="FC", FC_method = "emp", stat="mean", labs = labs,
-        title = paste0(plot_title, " Empirical FC Prior"))
+    # p5 <- plot(prior, what="FC", FC_method = "emp", stat="mean", labs = labs,
+    #     title = paste0(plot_title, " Empirical FC Prior"))
+    p5 <- plot_FC_gg(
+      prior$prior$FC$empirical$mean,
+      labs      = labs,
+      lim = c(-0.8, 0.8),
+      title=paste0(plot_title, " Empirical FC Prior Mean")
+    )
     ggplot2::ggsave(file.path(out_dir, paste0(base_name, "_FC_Empirical_mean.png")), plot = p5, bg = "white")
 
-    p6 <-plot(prior, what="FC",  FC_method = "emp", stat="sd", labs = labs, 
-        title = paste0(plot_title, " Empirical FC Prior"))
+    # p6 <-plot(prior, what="FC",  FC_method = "emp", stat="sd", labs = labs, 
+    #     title = paste0(plot_title, " Empirical FC Prior"))
+    p6 <- plot_FC_gg(
+      sqrt(prior$prior$FC$empirical$var),
+      labs      = labs,
+      lim = c(0, 0.4),
+      title=paste0(plot_title, " Empirical FC Prior SD")
+    )
     ggplot2::ggsave(file.path(out_dir, paste0(base_name, "_FC_Empirical_sd.png")), plot = p6, bg = "white") 
 
 }
